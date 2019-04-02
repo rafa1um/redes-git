@@ -7,7 +7,7 @@ print("HOST: ", end='')
 tcp_ip = input()    # ip para autenticacao
 print("PORT: ", end='')
 tcp_port = input()    # porta usada na trasnferencia
-BUFSIZ = 1024
+BUFSIZ = 100
 server.bind((tcp_ip, int(tcp_port)))
 f = open('transferred-file.jpeg', 'wb')
 # cria um arquivo que sera escrito com os dados do arquivo recebido
