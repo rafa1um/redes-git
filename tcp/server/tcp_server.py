@@ -3,11 +3,13 @@ import socket
 
 server = socket.socket()
 
-tcp_ip = 'localhost'
-tcp_port = 33000
+print("HOST: ", end='')
+tcp_ip = input()    # ip para autenticacao
+print("PORT: ", end='')
+tcp_port = input()    # porta usada na trasnferencia
 BUFSIZ = 1024
-server.bind((tcp_ip, tcp_port))
-f = open('ince.jpeg', 'wb')
+server.bind((tcp_ip, int(tcp_port)))
+f = open('transferred-file.jpeg', 'wb')
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 server.listen(5)    # servidor aguarda uma conexao
 
