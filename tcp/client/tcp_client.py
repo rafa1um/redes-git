@@ -3,13 +3,13 @@ import time
 
 
 def send_packets(l, size):
-        for i in range(0,size-1):
+        for i in range(0,size):
+                print("Enviando pacote ", packet_count, "...")
                 server.sendall(l)
                 packet_count += 1
                 l = f.read(BUFSIZ)
                 if not l:
                         break
-                i += 1
         print(i)
 
 server = socket.socket()    # cria um socket
@@ -31,12 +31,11 @@ l = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (1024 bytes)
 count_loop += 1
 
 while(l):   # enquanto nao for final do arquivo, continua o loop
-        print("Enviando...")
         send_packets(l, 6)  # enviando 6 pacotes
         count_loop += 1  # quantidade de tempo
         time.sleep(0.02)  # tempo de espera
 f.close()   # fecha o arquivo
-print("Enviado!")
+print("Enviados,", packet_count, "pacotes em", count_loop*0.02, "segundos!")
 server.shutdown(socket.SHUT_RDWR)
 # envia uma notificacao de desligament para o servidor
 server.close()  # fecha a conexao
