@@ -26,8 +26,6 @@ while True:     # loop infinito
         # recebe os proximos BUFSIZ bytes enviados pelo client
     f.close()   # fecha o arquivo
     print("Recebido!")
-    finConn = "Conexão finalizada!"
-    conn.sendall(finConn.encode('utf-8'))
-    # avisa que a conexao finalizou (nao ta funcionando)
+
     conn.close()    # fecha a conexao
     break   # quebra o loop
