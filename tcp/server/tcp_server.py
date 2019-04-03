@@ -12,6 +12,7 @@ server.bind((tcp_ip, int(tcp_port)))
 f = open('transferred-file.jpeg', 'wb')
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 server.listen(5)    # servidor aguarda uma conexao
+i = 1
 
 while True:     # loop infinito
     conn, addr = server.accept()    # estabelece conexao com o client
@@ -20,9 +21,10 @@ while True:     # loop infinito
     l = conn.recv(BUFSIZ)
     # recebe os primeiros BUFSIZ bytes enviados pelo client
     while(l):
-        print("Recebendo arquivo...")
+        print("Recebido o pacote", i)
         f.write(l)
         l = conn.recv(BUFSIZ)
+        i += 1
         # recebe os proximos BUFSIZ bytes enviados pelo client
     f.close()   # fecha o arquivo
     print("Recebido!")
