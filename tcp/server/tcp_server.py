@@ -10,15 +10,17 @@ print("PORT: ", end='')
 tcp_port = input()    # porta usada na trasnferencia
 BUFSIZ = 100
 server.bind((tcp_ip, int(tcp_port)))
-f = open('transferred-file.jpeg', 'wb')
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 server.listen(5)    # servidor aguarda uma conexao
 i = 1
+file = 0
 
 while True:     # loop infinito
     conn, addr = server.accept()    # estabelece conexao com o client
     start = datetime.datetime.now()
     print(addr, "Conectou-se")
+    file = conn.recv(1024)
+    f = open(file, 'wb')
     print("Recebendo...")
     l = conn.recv(BUFSIZ)
     # recebe os primeiros BUFSIZ bytes enviados pelo client
@@ -38,7 +40,7 @@ while True:     # loop infinito
     minutes, seconds = divmod(remainder, 60)
     seconds += td.microseconds / 1e6
 
-    size = os.path.getsize('transferred-file.jpeg')
+    size = os.path.getsize(file)
     print("Quantidade de bytes recebidos:",  size, 'em ', hours,
           'horas, ', minutes, 'minutos e', seconds, "segundos!")
     print("A taxa de recebimento foi de ", (size/td.total_seconds()) * 8, "bits/s")

@@ -30,7 +30,8 @@ def main():
         tcp_port = input()    # porta usada na trasnferencia
         server.connect((tcp_ip, int(tcp_port)))  # faz a conexao com ip e porta
         print("Informe o nome do arquivo a ser enviado: ", end='')
-        file = input()  # entrada do nome do arquivo
+        file = input()  # entrada do nome do arquivo   
+        server.sendall(file.encode())
         print("Enviando o arquivo", file, "...")
         start = datetime.datetime.now()
         f = open(file, 'rb')   # abre arquivo que sera enviado
@@ -48,7 +49,7 @@ def main():
         minutes, seconds = divmod(remainder, 60)
         seconds += td.microseconds / 1e6
         print("Enviados", packet_count, "pacotes em", hours, 'horas, ', minutes, 'minutos e' ,seconds, "segundos!")
-        size = os.path.getsize('../server/transferred-file.jpeg')
+        size = os.path.getsize('../server/%s'% file)
         print("Quantidade de bytes enviados:", size, 'ou ',
               (size * 8), 'bits')
         print("Taxa de transferencia:",
