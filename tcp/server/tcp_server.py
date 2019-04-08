@@ -28,6 +28,8 @@ while True:     # loop infinito
         # recebe os proximos BUFSIZ bytes enviados pelo client
     f.close()   # fecha o arquivo
     print("Recebido!")
+    print("Quantidade de bytes recebidos:", BUFSIZ * (i - 1))
+    print("Taxa de transferencia:", ((BUFSIZ * (i - 1) * 8) / 60), "bits/s")
 
     conn.close()    # fecha a conexao
     break   # quebra o loop

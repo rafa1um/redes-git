@@ -9,7 +9,7 @@ server = socket.socket()    # cria um socket
 def send_packets(f, l, size):
         global packet_count
         global server
-        for i in range(0,size):
+        for i in range(0, size):
                 print("Enviando pacote ", packet_count, "...")
                 server.sendall(l)
                 packet_count += 1
@@ -19,7 +19,7 @@ def send_packets(f, l, size):
         return l
 
 
-def main(): 
+def main():
         global count_loop
         count_loop = 0  # contador de loops
         print("HOST: ", end='')
@@ -31,7 +31,7 @@ def main():
         file = input()  # entrada do nome do arquivo
         print("Enviando o arquivo", file, "...")
         f = open(file, 'rb')   # abre arquivo que sera enviado
-        l = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (1024 bytes)
+        l = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (100 bytes)
         count_loop += 1
         while(l):   # enquanto nao for final do arquivo, continua o loop
                 l = send_packets(f, l, 6)  # enviando 6 pacotes
@@ -39,8 +39,10 @@ def main():
                 time.sleep(0.02)  # tempo de espera
         f.close()   # fecha o arquivo
         print("Enviados", packet_count, "pacotes em", count_loop*0.02, "segundos!")
+        print("Quantidade de bytes enviados:", BUFSIZ * packet_count)
+        print("Taxa de transferencia:", ((BUFSIZ * packet_count * 8) / 60), "bits/s")
         server.shutdown(socket.SHUT_RDWR)
-        # envia uma notificacao de desligament para o servidor
+        # envia uma notificacao de desligamento para o servidor
         server.close()  # fecha a conexao
 
 
