@@ -1,5 +1,6 @@
 import socket
-
+import os
+import datetime
 
 server = socket.socket()
 
@@ -16,6 +17,7 @@ i = 1
 
 while True:     # loop infinito
     conn, addr = server.accept()    # estabelece conexao com o client
+    start = datetime.datetime.now()
     print(addr, "Conectou-se")
     print("Recebendo...")
     l = conn.recv(BUFSIZ)
@@ -28,8 +30,16 @@ while True:     # loop infinito
         # recebe os proximos BUFSIZ bytes enviados pelo client
     f.close()   # fecha o arquivo
     print("Recebido!")
-    print("Quantidade de bytes recebidos:", BUFSIZ * (i - 1))
-    print("Taxa de transferencia:", ((BUFSIZ * (i - 1) * 8) / 60), "bits/s")
 
     conn.close()    # fecha a conexao
+    end = datetime.datetime.now()
+    td = end - start
+    hours, remainder = divmod(td.seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    seconds += td.microseconds / 1e6
+
+    size = os.path.getsize('transferred-file.jpeg')
+    print("Quantidade de bytes recebidos:",  size, 'em ', hours,
+          'horas, ', minutes, 'minutos e', seconds, "segundos!")
+    print("A taxa de recebimento foi de ", (size/td.total_seconds()) * 8, "bits/s")
     break   # quebra o loop
