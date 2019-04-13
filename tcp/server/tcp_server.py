@@ -1,13 +1,12 @@
 import socket
 import os
 import datetime
+import sys
 
 server = socket.socket()
 
-print("HOST: ", end='')
-tcp_ip = input()    # ip para autenticacao
-print("PORT: ", end='')
-tcp_port = input()    # porta usada na trasnferencia
+tcp_ip = sys.argv[1]    # ip para autenticacao
+tcp_port = sys.argv[2]    # porta usada na trasnferencia
 BUFSIZ = 100
 server.bind((tcp_ip, int(tcp_port)))
 # cria um arquivo que sera escrito com os dados do arquivo recebido
