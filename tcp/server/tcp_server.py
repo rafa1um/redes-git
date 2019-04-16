@@ -16,12 +16,13 @@ file = 0
 
 while True:     # loop infinito
     conn, addr = server.accept()    # estabelece conexao com o client
-    start = datetime.datetime.now()
     print(addr, "Conectou-se")
     file = conn.recv(1024)
     f = open(file, 'wb')
     print("Recebendo...")
     l = conn.recv(BUFSIZ)
+    start = datetime.datetime.now()
+    conn.settimeout(0.02)
     # recebe os primeiros BUFSIZ bytes enviados pelo client
     while(l):
         print("Recebido o pacote", i)
@@ -29,6 +30,7 @@ while True:     # loop infinito
         l = conn.recv(BUFSIZ)
         i += 1
         # recebe os proximos BUFSIZ bytes enviados pelo client
+    conn.settimeout(None)
     f.close()   # fecha o arquivo
     print("Recebido!")
 
