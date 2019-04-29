@@ -16,15 +16,17 @@ def send_packets(f, data, size):
         for i in range(0, size):
                 check = server.send(data)
                 if len(data) == check:
-                        print('Pacote', packet_count, 'enviado')
+                        print('Pacote', packet_count, 'enviado', len(data))
                         data = f.read(BUFSIZ)
                         packet_count += 1
                         i += 1
+                        continue
+                if check == 0:
+                        break
                 while len(data) != check:
                         print('reenviando o pacote ', packet_count)
                         check = server.send(data)
-                if check == 0:
-                        break
+                
         return check
 
 

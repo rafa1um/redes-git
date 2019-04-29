@@ -24,13 +24,12 @@ while True:     # loop infinito
     # recebe os primeiros BUFSIZ bytes enviados pelo client
     data = server.recv(BUFSIZ)
     while data:
-        print("Recebido o pacote", i)
+        print("Recebido o pacote", i, len(str(data)))
         data = f.write(bytes(data))  
         data = server.recv(BUFSIZ)
         i += 1
     print("Recebido!")
     f.close()
-    break
     # recebe os proximos BUFSIZ bytes enviados pelo client
 
 #   ---------------non-relevant area (closes and prints) ----------------------
