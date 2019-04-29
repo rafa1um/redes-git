@@ -27,8 +27,8 @@ def main():
         count_loop = 0  # contador de loops
         udp_ip = sys.argv[1]    # ip para autenticacao
         udp_port = sys.argv[2]    # porta usada na trasnferencia
-        server.connect(udp_ip, udp_port)
         file_name = sys.argv[3]
+        server.connect(udp_ip, udp_port)
         server.sendto((file_name).encode(), (udp_ip.encode(), int(udp_port)))
         print("Enviando o arquivo", file_name, "...")
         f = open(file_name, 'rb')   # abre arquivo que sera enviado
