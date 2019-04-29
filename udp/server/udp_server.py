@@ -22,20 +22,16 @@ while True:     # loop infinito
     f = open(file_name, 'wb')
     print("Recebendo...")
     # recebe os primeiros BUFSIZ bytes enviados pelo client
-    while True:
-        ready = select.select([server], [], [server], timeout)
-        if ready[0]:
-            print("Recebido o pacote", i)
-            data, addr = server.recvfrom(BUFSIZ)
-            f.write(data)  
-            i += 1
-        elif ready[2]:
-            print("Erro no pacote" , i, "tentando novamente")
-        else:
-            print("Recebido!")
-            f.close()
-            break
-        # recebe os proximos BUFSIZ bytes enviados pelo client
+    data = server.recv(BUFSIZ)
+    while data:
+        print("Recebido o pacote", i)
+        data = f.write(bytes(data))  
+        data = server.recv(BUFSIZ)
+        i += 1
+    print("Recebido!")
+    f.close()
+    break
+    # recebe os proximos BUFSIZ bytes enviados pelo client
 
 #   ---------------non-relevant area (closes and prints) ----------------------
 

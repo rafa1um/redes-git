@@ -12,10 +12,11 @@ server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # cria um socket
 def send_packets(f, data, size):
         global packet_count
         global server
+        data = bytes(data)
         for i in range(0, size):
                 check = server.send(data)
                 if len(data) == check:
-                        print('pacote enviado')
+                        print('Pacote', packet_count, 'enviado')
                         data = f.read(BUFSIZ)
                         packet_count += 1
                         i += 1
@@ -33,7 +34,7 @@ def main():
         udp_ip = sys.argv[1]    # ip para autenticacao
         udp_port = sys.argv[2]    # porta usada na trasnferencia
         file_name = sys.argv[3]
-        server.connect(udp_ip, udp_port)
+        server.connect((udp_ip, int(udp_port)))
         server.sendto((file_name).encode(), (udp_ip.encode(), int(udp_port)))
         print("Enviando o arquivo", file_name, "...")
         f = open(file_name, 'rb')   # abre arquivo que sera enviado
