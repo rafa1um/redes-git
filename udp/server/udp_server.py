@@ -23,12 +23,14 @@ while True:     # loop infinito
     print("Recebendo...")
     # recebe os primeiros BUFSIZ bytes enviados pelo client
     while True:
-        ready = select.select([server], [], [], timeout)
+        ready = select.select([server], [], [server], timeout)
         if ready[0]:
             print("Recebido o pacote", i)
             data, addr = server.recvfrom(BUFSIZ)
             f.write(data)  
             i += 1
+        elif ready[2]:
+            print("Erro no pacote" , i, "tentando novamente")
         else:
             print("Recebido!")
             f.close()
