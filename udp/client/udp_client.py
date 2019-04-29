@@ -8,6 +8,20 @@ BUFSIZ = 200   # quantidade de bytes que será enviado por vez
 packet_count = 1  # contador de pacotes
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # cria um socket
 
+
+def send_packets(f, data, size):
+        global packet_count
+        global server
+        for i in range(0, size):
+                data = f.read(BUFSIZ)
+                if not data:
+                        break
+                else:  
+                        packet_count += 1
+                        
+        return data
+
+
 def main():
         global count_loop
         count_loop = 0  # contador de loops
@@ -22,7 +36,7 @@ def main():
         while(data):   # enquanto nao for final do arquivo, continua o loop
                 if(server.sendto(data, (udp_ip.encode(), int(udp_port)))):
                         data = f.read(BUFSIZ)  # enviando 6 pacotes
-                        time.sleep(0.02)  # tempo de espera
+                        time.sleep(0.00000001)  # tempo de espera
         f.close()   # fecha o arquivo
         # envia uma notificacao de desligamento para o servidor
 

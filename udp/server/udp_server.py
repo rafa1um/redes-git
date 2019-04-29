@@ -12,7 +12,7 @@ BUFSIZ = 200
 server.bind((udp_ip, int(udp_port)))
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 i = 1
-timeout = 3
+timeout = 0.02
 
 while True:     # loop infinito
     data, addr = server.recvfrom(BUFSIZ)    # estabelece conexao com o client
