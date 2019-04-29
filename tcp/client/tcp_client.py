@@ -4,7 +4,7 @@ import os
 import datetime
 import sys
 
-BUFSIZ = 100   # quantidade de bytes que será enviado por vez
+BUFSIZ = 2000   # quantidade de bytes que será enviado por vez
 packet_count = 1  # contador de pacotes
 server = socket.socket()    # cria um socket
 
@@ -38,7 +38,7 @@ def main():
         l = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (100 bytes)
         start = datetime.datetime.now()
         while(l):   # enquanto nao for final do arquivo, continua o loop
-                l = send_packets(f, l, 2)  # enviando 6 pacotes
+                l = send_packets(f, l, 6)  # enviando 6 pacotes
         f.close()   # fecha o arquivo
         # envia uma notificacao de desligamento para o servidor
         server.shutdown(socket.SHUT_RDWR)

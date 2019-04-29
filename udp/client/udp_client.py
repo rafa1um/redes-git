@@ -27,6 +27,7 @@ def main():
         count_loop = 0  # contador de loops
         udp_ip = sys.argv[1]    # ip para autenticacao
         udp_port = sys.argv[2]    # porta usada na trasnferencia
+        server.connect(udp_ip, udp_port)
         file_name = sys.argv[3]
         server.sendto((file_name).encode(), (udp_ip.encode(), int(udp_port)))
         print("Enviando o arquivo", file_name, "...")
@@ -34,9 +35,7 @@ def main():
         data = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (100 bytes)
         start = datetime.datetime.now()
         while(data):   # enquanto nao for final do arquivo, continua o loop
-                if(server.sendto(data, (udp_ip.encode(), int(udp_port)))):
-                        data = f.read(BUFSIZ)  # enviando 6 pacotes
-                        time.sleep(0.00000001)  # tempo de espera
+                data = f.send_packets(f, data, 6)  # enviando 6 pacotes
         f.close()   # fecha o arquivo
         # envia uma notificacao de desligamento para o servidor
 

@@ -7,7 +7,7 @@ server = socket.socket()
 
 tcp_ip = sys.argv[1]    # ip para autenticacao
 tcp_port = sys.argv[2]    # porta usada na trasnferencia
-BUFSIZ = 100
+BUFSIZ = 2000
 server.bind((tcp_ip, int(tcp_port)))
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 server.listen(5)    # servidor aguarda uma conexao
@@ -22,7 +22,7 @@ while True:     # loop infinito
     print("Recebendo...")
     l = conn.recv(BUFSIZ)
     start = datetime.datetime.now()
-    conn.settimeout(0.02)
+    conn.settimeout(0.04)
     # recebe os primeiros BUFSIZ bytes enviados pelo client
     while(l):
         print("Recebido o pacote", i)
