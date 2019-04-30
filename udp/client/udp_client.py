@@ -26,7 +26,7 @@ def send_packets(f, data, size):
                 while len(data) != check:
                         print('reenviando o pacote ', packet_count)
                         check = server.send(data)
-        return check
+        return data
 
 
 def main():
@@ -42,8 +42,7 @@ def main():
         data = f.read(BUFSIZ)  # le os primeiros BUFSIZ bytes do arquivo (100 bytes)
         start = datetime.datetime.now()
         while(data):   # enquanto nao for final do arquivo, continua o loop
-                data = send_packets(f, data, 20000)  # enviando 6 pacotes
-                time.sleep(0.02)
+                data = send_packets(f, data, 6)  # enviando 6 pacotes
         f.close()   # fecha o arquivo
         # envia uma notificacao de desligamento para o servidor
 
