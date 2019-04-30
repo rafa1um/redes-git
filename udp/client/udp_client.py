@@ -15,13 +15,14 @@ server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # cria um socket
 def send_packets(f, data, size):
         global packet_count
         global server
-        data = bytes(data)
         for i in range(0 , size):
                 pack = pacote.pacote(packet_count, data)
                 tosend = pickle.dumps(pack)
                 server.send(tosend)
-                print('Pacote', packet_count, 'enviado', len(data))
+                print('Pacote', packet_count, 'enviado')
                 data = f.read(BUFSIZ)
+                if not data:
+                        break
                 packet_count += 1
                 i += 1
         return data
@@ -41,9 +42,10 @@ def main():
         start = datetime.datetime.now()
         while(data):   # enquanto nao for final do arquivo, continua o loop
                 data = send_packets(f, data, 6)  # enviando 6 pacotes
+        eof = 'EOF-----'
+        server.send(pickle.dumps(eof))
         f.close()   # fecha o arquivo
         # envia uma notificacao de desligamento para o servidor
-
 
         #     -------------  non-relevant area (closes and prints)------------------
 
