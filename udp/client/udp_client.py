@@ -3,6 +3,9 @@ import time
 import os
 import datetime
 import sys
+import pickle
+sys.path.append("../")
+import pacote
 
 BUFSIZ = 200   # quantidade de bytes que será enviado por vez
 packet_count = 1  # contador de pacotes
@@ -14,18 +17,13 @@ def send_packets(f, data, size):
         global server
         data = bytes(data)
         for i in range(0 , size):
-                check = server.send(data)
-                if len(data) == check and check != 0:
-                        print('Pacote', packet_count, 'enviado', len(data))
-                        data = f.read(BUFSIZ)
-                        packet_count += 1
-                        i += 1
-                        continue
-                if check == 0:
-                        break
-                while len(data) != check:
-                        print('reenviando o pacote ', packet_count)
-                        check = server.send(data)
+                pack = pacote.pacote(packet_count, data)
+                tosend = pickle.dumps(pack)
+                server.send(tosend)
+                print('Pacote', packet_count, 'enviado', len(data))
+                data = f.read(BUFSIZ)
+                packet_count += 1
+                i += 1
         return data
 
 

@@ -3,7 +3,9 @@ import os
 import datetime
 import sys
 import select
-
+import pickle
+sys.path.append("../")
+import pacote
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 udp_ip = sys.argv[1]    # ip para autenticacao
@@ -22,11 +24,12 @@ while True:     # loop infinito
     f = open(file_name, 'wb')
     print("Recebendo...")
     # recebe os primeiros BUFSIZ bytes enviados pelo client
-    data = server.recv(BUFSIZ)
+    data = server.recv(BUFSIZ + 20)
     while data:
-        print("Recebido o pacote", i)
-        data = f.write(data)  
-        data = server.recv(BUFSIZ)
+        packo = pickle.loads(data)
+        print("Recebido o pacote", packo.getId())
+        data = f.write(packo.getData())  
+        data = server.recv(BUFSIZ + 20)
         i += 1
     print("Recebido!")
     f.close()
