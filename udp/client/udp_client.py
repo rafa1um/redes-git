@@ -11,7 +11,6 @@ BUFSIZ = 200   # quantidade de bytes que será enviado por vez
 packet_count = 1  # contador de pacotes
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # cria um socket
 
-
 def send_packets(f, data, size):
         global packet_count
         global server
@@ -20,6 +19,13 @@ def send_packets(f, data, size):
                 tosend = pickle.dumps(pack)
                 server.send(tosend)
                 print('Pacote', packet_count, 'enviado')
+                checker = server.recv(BUFSIZ)
+                checker = pickle.loads(checker)
+                while checker != packet_count:
+                        server.send(tosend)
+                        print('Pacote', packet_count, 'enviado novamente')
+                        checker = pickle.loads(server.recv(BUFSIZ))
+                print('Pacote', packet_count, 'checado!')
                 data = f.read(BUFSIZ)
                 if not data:
                         break

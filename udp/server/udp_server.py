@@ -6,6 +6,7 @@ import select
 import pickle
 sys.path.append("../")
 import pacote
+
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 udp_ip = sys.argv[1]    # ip para autenticacao
 udp_port = sys.argv[2]    # porta usada na trasnferencia
@@ -23,12 +24,14 @@ while True:     # loop infinito
     f = open(file_name, 'wb')
     print("Recebendo...")
     # recebe os primeiros BUFSIZ bytes enviados pelo client
-    data = server.recv(BUFSIZ)
+    data, addr = server.recvfrom(BUFSIZ)
     while data:
         if isinstance(pickle.loads(data), str):
             break
         packo = pickle.loads(data)
         print("Recebido o pacote", packo.getId())
+        checker = packo.getId()
+        test = server.sendto(pickle.dumps(checker), addr)
         data = f.write(packo.getData())  
         data = server.recv(BUFSIZ)
         i += 1
