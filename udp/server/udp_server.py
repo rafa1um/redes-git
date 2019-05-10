@@ -29,12 +29,17 @@ while True:     # loop infinito
         if isinstance(pickle.loads(data), str):
             break
         packo = pickle.loads(data)
-        print("Recebido o pacote", packo.getId())
         checker = packo.getId()
-        test = server.sendto(pickle.dumps(checker), addr)
-        data = f.write(packo.getData())  
-        data = server.recv(BUFSIZ)
+        server.sendto(pickle.dumps(checker), addr)
+        while checker != i:
+            data = server.recv(BUFSIZ)
+            packo = pickle.loads(data)
+            checker = packo.getId()
+            server.sendto(pickle.dumps(checker), addr)
+        f.write(packo.getData())  
+        print("Recebido o pacote", packo.getId())
         i += 1
+        data = server.recv(BUFSIZ)
     print("Recebido!")
     f.close()
     # recebe os proximos BUFSIZ bytes enviados pelo client
