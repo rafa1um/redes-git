@@ -33,6 +33,7 @@ while True:     # loop infinito
         server.sendto(pickle.dumps(checker), addr)
         print('Foi recebido o pacote', checker, 'e era para vir o pacote', i)
         while checker != i:
+            print('Resquisitando o reenvio do pacote', i)
             data = server.recv(BUFSIZ)
             packo = pickle.loads(data)
             checker = packo.getId()

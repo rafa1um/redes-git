@@ -23,6 +23,7 @@ def send_packets(f, data, size):
                 print('Pacote', packet_count, 'enviado')
                 checker = server.recv(BUFSIZ)
                 checker = pickle.loads(checker)
+                print('Checker', checker ,'recebido')
                 while checker != pack.getId():
                         server.send(tosend)
                         print('Pacote', packet_count, 'enviado novamente')
@@ -35,7 +36,6 @@ def send_packets(f, data, size):
                         server.send(pickle.dumps(eof))
                         break
                 packet_count += 1
-                i += 1
         return data
 
 
