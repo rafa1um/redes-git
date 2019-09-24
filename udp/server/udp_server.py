@@ -6,15 +6,16 @@ import select
 import pickle
 sys.path.append("../")
 import pacote
+import time
 
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 udp_ip = sys.argv[1]    # ip para autenticacao
 udp_port = sys.argv[2]    # porta usada na trasnferencia
-BUFSIZ = 1000 + sys.getsizeof(pacote.pacote)
+BUFSIZ = 2000 + sys.getsizeof(pacote.pacote)
 server.bind((udp_ip, int(udp_port)))
 # cria um arquivo que sera escrito com os dados do arquivo recebido
 i = 1
-timeout = 0.02
+timeout = 2
 
 while True:     # loop infinito
     data, addr = server.recvfrom(BUFSIZ)    # estabelece conexao com o client
@@ -31,13 +32,15 @@ while True:     # loop infinito
         packo = pickle.loads(data)
         checker = packo.getId()
         server.sendto(pickle.dumps(checker), addr)
-        print('Foi recebido o pacote', checker, 'e era para vir o pacote', i)
         while checker != i:
             print('Resquisitando o reenvio do pacote', i)
             data = server.recv(BUFSIZ)
             packo = pickle.loads(data)
             checker = packo.getId()
             server.sendto(pickle.dumps(checker), addr)
+        data = server.recv(BUFSIZ)
+        if data == b"k":
+            print("ok")
         f.write(packo.getData())  
         print("Recebido o pacote", packo.getId())
         i += 1

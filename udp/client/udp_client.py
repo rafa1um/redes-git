@@ -7,7 +7,7 @@ import pickle
 sys.path.append("../")
 import pacote
 
-BUFSIZ = 1000   # quantidade de bytes que será enviado por vez
+BUFSIZ = 2000   # quantidade de bytes que será enviado por vez
 packet_count = 0  # contador de pacotes
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)    # cria um socket
 lost = 0
