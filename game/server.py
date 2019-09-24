@@ -118,9 +118,12 @@ def set_questions():
 
 def main():
 
+    
     questions = set_questions()
-    for questao in questions:
-        print(questao.questionText)
+    # Aguarda as duas conexões.
+    # Envia aos dois que o jogo vai começar, espera a resposta dos dois.
+    # Enquanto houver perguntas, continua as enviando e contabilizando pontuação.
+    # Senão, apresenta aos dois a tela de fim de jogo.
 
 
 main()
