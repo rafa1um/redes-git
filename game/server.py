@@ -1,4 +1,6 @@
 import question
+import socket
+import sys
 
 def set_questions():
 
@@ -117,9 +119,31 @@ def set_questions():
     return question_list
 
 def main():
-
     
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+    BUFSIZ = 2000
+
+    udp_ip = sys.argv[1]    # ip para autenticacao
+    udp_port = sys.argv[2]    # porta usada na trasnferencia
+    server.bind((udp_ip, int(udp_port)))
+
     questions = set_questions()
+
+    datap1, addr1 = server.recvfrom(BUFSIZ)
+
+    print("Aguardando jogadores...")
+
+    print("Primeiro jogador,", datap1.decode(), 'conectado.')
+
+    datap2, addr2 = server.recvfrom(BUFSIZ)
+
+    print("Segundo jogador,", datap2.decode(), 'conectado.')
+
+    server.sendto("STARTGAME".encode(), addr1)
+
+    server.sendto("STARTGAME".encode(), addr2)
+    
     # Aguarda as duas conexões.
     # Envia aos dois que o jogo vai começar, espera a resposta dos dois.
     # Enquanto houver perguntas, continua as enviando e contabilizando pontuação.
