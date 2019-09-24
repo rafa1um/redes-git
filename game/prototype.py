@@ -1,6 +1,6 @@
 import question
 
-def start_game():
+def set_questions():
 
     question_list = []
 
@@ -118,7 +118,7 @@ def start_game():
 
 def main():
 
-    questions = start_game()
+    questions = set_questions()
     for questao in questions:
         print(questao.questionText)
 
