@@ -139,6 +139,9 @@ def set_questions():
     return question_list
 
 def main():
+
+    score1 = 0
+    score2 = 0
     
     server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -170,6 +173,33 @@ def main():
     if msg1.decode() == "OK" and msg1 == msg2:
         for questao in questions:
             send_question(questao, addr1, addr2, server)
+            dataAns1, addrAns1 = server.recvfrom(BUFSIZ)
+            dataAns2, addrAns2 = server.recvfrom(BUFSIZ)
+
+            if addrAns1 == addr1:
+                respostap1 = pickle.loads(dataAns1)
+                respostap2 = pickle.loads(dataAns2)
+            else:
+                respostap1 = pickle.loads(dataAns2)
+                respostap2 = pickle.loads(dataAns1)
+
+            if int(respostap1[1]) == int(questao.rightAns):
+                score1 += 10000 - respostap1[0]
+                server.sendto("Voce acertou!".encode(), addr1)
+            elif int(respostap1[1]) != 0:
+                server.sendto("Voce errou ):".encode(), addr1)
+                # envia msg pro p1 de q ele errou
+            elif int(respostap1[1]) == 0:
+                server.sendto("Seu tempo se esgotou ):".encode(), addr1)
+            
+            if int(respostap2[1]) == int(questao.rightAns):
+                score2 += 10000 - respostap2[0]
+                server.sendto("Voce acertou".encode(), addr2)
+            elif int(respostap2[1]) != 0:
+                server.sendto("Voce errou ):".encode(), addr2)
+                # envia msg pro p2 q ele errou
+            elif int(respostap2[1]) == 0:
+                server.sendto("Seu tempo se esgotou ):".encode(), addr2)
     # Envia aos dois que o jogo vai começar, espera a resposta dos dois.
     # Enquanto houver perguntas, continua as enviando e contabilizando pontuação.
     # Senão, apresenta aos dois a tela de fim de jogo.

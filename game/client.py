@@ -2,6 +2,27 @@ import sys
 import time
 import socket
 import pickle
+import select
+
+
+def question_game(question):
+    rec_time = time.clock()
+    print("Pergunta:", question.questionText)
+    print("1 -", question.ans1)
+    print("2 -", question.ans2)
+    print("3 -", question.ans3)
+    print("4 -", question.ans4)
+    i, o, e = select.select([sys.stdin], [], [], 10)
+    if (i):
+        ans = sys.stdin.readline().strip()
+        print("Você respondeu:", ans)
+        print("Aguarde seu oponente.")
+        ans_time = time.clock() - rec_time
+    else:
+        ans_time = 10
+        ans = 0
+
+    return ans_time, ans
 
 def main():
 
@@ -29,7 +50,10 @@ def main():
 
     while pickle.loads(qst).questionText != "FIM":
         # mostra questao
-        print(pickle.loads(qst).questionText)
+        tempo_resposta = question_game(pickle.loads(qst))
+        server.sendto(pickle.dumps(tempo_resposta), (ipAddr.encode(), int(portConnect)))
+        qst = server.recv(BUFSIZ)
+        print(qst.decode())
         qst = server.recv(BUFSIZ)
 
 
