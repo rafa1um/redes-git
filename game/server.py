@@ -1,6 +1,15 @@
 import question
 import socket
 import sys
+import pickle
+
+
+def send_question(questao, addr1, addr2, server):
+
+    server.sendto(pickle.dumps(questao), addr1)
+    server.sendto(pickle.dumps(questao), addr2)
+
+    #espera resposta
 
 def set_questions():
 
@@ -116,6 +125,17 @@ def set_questions():
     )
     question_list.append(question10)
 
+    question11 = question.Question(
+        11,
+        "FIM",
+        "-",
+        "-",
+        "-",
+        "-",
+        0
+    )
+    question_list.append(question11)
+
     return question_list
 
 def main():
@@ -130,9 +150,9 @@ def main():
 
     questions = set_questions()
 
-    datap1, addr1 = server.recvfrom(BUFSIZ)
-
     print("Aguardando jogadores...")
+
+    datap1, addr1 = server.recvfrom(BUFSIZ)
 
     print("Primeiro jogador,", datap1.decode(), 'conectado.')
 
@@ -143,8 +163,13 @@ def main():
     server.sendto("STARTGAME".encode(), addr1)
 
     server.sendto("STARTGAME".encode(), addr2)
-    
-    # Aguarda as duas conexões.
+
+    msg1 = server.recv(BUFSIZ)
+    msg2 = server.recv(BUFSIZ)
+
+    if msg1.decode() == "OK" and msg1 == msg2:
+        for questao in questions:
+            send_question(questao, addr1, addr2, server)
     # Envia aos dois que o jogo vai começar, espera a resposta dos dois.
     # Enquanto houver perguntas, continua as enviando e contabilizando pontuação.
     # Senão, apresenta aos dois a tela de fim de jogo.

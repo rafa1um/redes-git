@@ -1,6 +1,7 @@
 import sys
 import time
 import socket
+import pickle
 
 def main():
 
@@ -21,7 +22,16 @@ def main():
 
     msg = server.recv(BUFSIZ)
 
-    print(msg.decode())
+    if msg.decode() == "STARTGAME":
+        server.sendto("OK".encode(), (ipAddr.encode(), int(portConnect)))
+    
+    qst = server.recv(BUFSIZ)
+
+    while pickle.loads(qst).questionText != "FIM":
+        # mostra questao
+        print(pickle.loads(qst).questionText)
+        qst = server.recv(BUFSIZ)
+
 
     # Conecta ao servidor
     # Quando receber a mensagem de que o jogo vai começar, começa a ouvir as perguntas
