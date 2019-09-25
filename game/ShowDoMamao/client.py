@@ -17,18 +17,29 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         self.portConnect = int(sys.argv[3])
         self.con = self.connectToServer(self.playerName, self.ipAddr, self.portConnect)
         self.startGame(self.con)
+        self.botaoEnviar.clicked.connect(self.enviaResposta)
 
-    def enviaResposta(self, con):
-        time_start = time.clock()
+    def enviaResposta(self):
+        if self.botaoEnviar.text() == "FIM DE JOGO":
+            exit()
+        resposta = 0
         if self.buttonResposta1.isChecked():
-            resposta = 1
+           resposta = 1
         elif self.buttonResposta2.isChecked():
-            resposta = 2
+           resposta = 2
         elif self.buttonResposta3.isChecked():
-            resposta = 3
+           resposta = 3
         elif self.buttonResposta4.isChecked():
-             resposta = 4
-        print("Respondeu", resposta)
+           resposta = 4
+        self.time_stop = time.perf_counter()
+        respPlayer = [resposta, self.playerName, self.time_stop - self.time_start]
+        self.con.sendall(pickle.dumps(respPlayer))
+        qst = self.con.recv(2000)
+        try:
+            if qst.decode() == "FIM":
+                self.endgame()
+        except Exception:
+            self.put_questions(qst)
 
     def checkArgs(self):
         if len(sys.argv) != 4:
@@ -52,9 +63,22 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         if data.decode() == "STARTGAME":
             con.sendall("OK".encode())
         qst = con.recv(2000)
+        self.put_questions(qst)
+
+    def put_questions(self, qst):
+        self.time_start = time.perf_counter()
         self.labelPergunta.setText(pickle.loads(qst).questionText)
         self.buttonResposta1.setText(pickle.loads(qst).ans1)
+        self.buttonResposta2.setText(pickle.loads(qst).ans2)
+        self.buttonResposta3.setText(pickle.loads(qst).ans3)
+        self.buttonResposta4.setText(pickle.loads(qst).ans4)
 
+    def endgame(self):
+        self.con.sendall("FIMRECEBIDO".encode())
+        msgfinal = self.con.recv(2000)
+        self.labelPergunta.setText(msgfinal.decode())
+        self.botaoEnviar.setText("FIM DE JOGO, " + self.playerName)
+        self.botaoEnviar.enabled = False
 
 def main():
     app = QApplication(sys.argv)
@@ -62,5 +86,5 @@ def main():
     form.show()
     app.exec_()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

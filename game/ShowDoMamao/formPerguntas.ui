@@ -32,7 +32,7 @@
      <rect>
       <x>30</x>
       <y>100</y>
-      <width>82</width>
+      <width>341</width>
       <height>17</height>
      </rect>
     </property>
@@ -45,7 +45,7 @@
      <rect>
       <x>30</x>
       <y>160</y>
-      <width>82</width>
+      <width>401</width>
       <height>17</height>
      </rect>
     </property>
@@ -58,7 +58,7 @@
      <rect>
       <x>30</x>
       <y>220</y>
-      <width>82</width>
+      <width>431</width>
       <height>17</height>
      </rect>
     </property>
@@ -71,7 +71,7 @@
      <rect>
       <x>30</x>
       <y>280</y>
-      <width>82</width>
+      <width>451</width>
       <height>17</height>
      </rect>
     </property>
@@ -92,26 +92,6 @@
      <string>Enviar</string>
     </property>
    </widget>
-   <widget class="QLCDNumber" name="lcdTimer">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>30</y>
-      <width>64</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>16</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="value" stdset="0">
-     <double>10.000000000000000</double>
-    </property>
-   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -119,7 +99,7 @@
      <x>0</x>
      <y>0</y>
      <width>529</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

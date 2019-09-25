@@ -2,12 +2,14 @@ import question
 import socket
 import sys
 import pickle
+import select
 
 
-def send_question(questao, addr1, addr2, server):
+def send_question(questao, connp1, connp2):
 
-    server.sendto(pickle.dumps(questao), addr1)
-    server.sendto(pickle.dumps(questao), addr2)
+    connp1.sendall(pickle.dumps(questao))
+    connp2.sendall(pickle.dumps(questao))
+    print("Questão", questao.questionText, " Enviada")
 
     #espera resposta
 
@@ -125,17 +127,6 @@ def set_questions():
     )
     question_list.append(question10)
 
-    question11 = question.Question(
-        11,
-        "FIM",
-        "-",
-        "-",
-        "-",
-        "-",
-        0
-    )
-    question_list.append(question11)
-
     return question_list
 
 def main():
@@ -159,15 +150,17 @@ def main():
 
     connp1, addr1 = server.accept()
     datap1 = connp1.recv(BUFSIZ)
+    p1name = datap1.decode()
 
-    print("Primeiro jogador,", datap1.decode(), 'conectado.')
+    print("Primeiro jogador,", p1name, 'conectado.')
 
     server.listen()
 
     connp2, addr2 = server.accept()
     datap2 = connp2.recv(BUFSIZ)
+    p2name = datap2.decode()
 
-    print("Segundo jogador,", datap2.decode(), 'conectado.')
+    print("Segundo jogador,", p2name, 'conectado.')
 
     connp1.sendall("STARTGAME".encode())
 
@@ -175,37 +168,76 @@ def main():
 
     msg1 = connp1.recv(BUFSIZ)
     msg2 = connp2.recv(BUFSIZ)
+    
+    scorep1 = 0
+    scorep2 = 0
 
     if msg1.decode() == "OK" and msg1 == msg2:
         for questao in questions:
-            send_question(questao, addr1, addr2, server)
-            dataAns1, addrAns1 = server.recvfrom(BUFSIZ)
-            dataAns2, addrAns2 = server.recvfrom(BUFSIZ)
-
-            if addrAns1 == addr1:
-                respostap1 = pickle.loads(dataAns1)
-                respostap2 = pickle.loads(dataAns2)
-            else:
-                respostap1 = pickle.loads(dataAns2)
-                respostap2 = pickle.loads(dataAns1)
-
-            if int(respostap1[1]) == int(questao.rightAns):
-                score1 += 10000 - respostap1[0]
-                server.sendto("Voce acertou!".encode(), addr1)
-            elif int(respostap1[1]) != 0:
-                server.sendto("Voce errou ):".encode(), addr1)
-                # envia msg pro p1 de q ele errou
-            elif int(respostap1[1]) == 0:
-                server.sendto("Seu tempo se esgotou ):".encode(), addr1)
+            send_question(questao, connp1, connp2)
+            ans1 = 10
+            ans2 = 10
             
-            if int(respostap2[1]) == int(questao.rightAns):
-                score2 += 10000 - respostap2[0]
-                server.sendto("Voce acertou".encode(), addr2)
-            elif int(respostap2[1]) != 0:
-                server.sendto("Voce errou ):".encode(), addr2)
-                # envia msg pro p2 q ele errou
-            elif int(respostap2[1]) == 0:
-                server.sendto("Seu tempo se esgotou ):".encode(), addr2)
+            socks = [connp1, connp2]
+            
+            av_sock, o, e = select.select(socks, [], [])
+            
+            ans1 = pickle.loads(av_sock[0].recv(2000))
+            print("RESPOSTA", ans1[0] , "RECEBIDA DE", ans1[1], "EM", ans1[2])
+            
+            if ans1[1] == p1name:
+                resp1 = ans1[0]
+                tempop1 = ans1[2]
+            else:
+                resp2 = ans1[0]
+                tempop2 = ans1[2]
+            
+            av_sock, o, e = select.select(socks, [], [])
+            
+            ans2 = pickle.loads(av_sock[0].recv(2000))
+            print("RESPOSTA", ans2[0] , "RECEBIDA DE", ans2[1], "EM", ans2[2])
+            
+            if ans2[1] == p1name:
+                resp1 = ans2[0]
+                tempop1 = ans2[2]
+            else:
+                resp2 = ans2[0]
+                tempop2 = ans2[2]
+            
+            if int(resp1) == int(questao.rightAns):
+                print(p1name, "acertou")
+                scorep1 += 10000 - tempop1 * 1000
+            else:
+                print(p1name, "errou")
+ 
+            if int(resp2) == int(questao.rightAns):
+                print(p2name, "acertou")
+                scorep1 += 10000 - tempop2 * 1000
+            else:
+                print(p2name, "errou")
+    
+    stringfim = "FIM DE JOGO!\n O Vencedor foi "
+    
+    if scorep1 > scorep2:
+        stringfim += p1name + " com " + str(scorep1) + " pontos!"
+    if scorep2 > scorep1:
+        stringfim += p2name + " com " + str(scorep2) + " pontos!"
+    if scorep2 == scorep1:
+        stringfim += "NINGUEM!!! houve um empate!"
+    
+    connp1.sendall("FIM".encode())
+    connp2.sendall("FIM".encode())
+    
+    msg1 = connp1.recv(2000)
+    msg2 = connp2.recv(2000)
+    
+    if msg1 == msg2 and msg1.decode() == "FIMRECEBIDO":
+        connp1.sendall(stringfim.encode())
+        connp2.sendall(stringfim.encode())
+        
+    
+    
+    
     # Envia aos dois que o jogo vai começar, espera a resposta dos dois.
     # Enquanto houver perguntas, continua as enviando e contabilizando pontuação.
     # Senão, apresenta aos dois a tela de fim de jogo.
