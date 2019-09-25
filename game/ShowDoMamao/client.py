@@ -77,7 +77,7 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         self.con.sendall("FIMRECEBIDO".encode())
         msgfinal = self.con.recv(2000)
         self.labelPergunta.setText(msgfinal.decode())
-        self.botaoEnviar.setText("FIM DE JOGO, " + self.playerName)
+        self.botaoEnviar.setText("FIM DE JOGO")
         self.botaoEnviar.enabled = False
 
 def main():
