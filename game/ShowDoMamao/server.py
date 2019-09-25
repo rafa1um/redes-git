@@ -173,8 +173,8 @@ def main():
 
     connp2.sendall("STARTGAME".encode())
 
-    msg1 = server.recv(BUFSIZ)
-    msg2 = server.recv(BUFSIZ)
+    msg1 = connp1.recv(BUFSIZ)
+    msg2 = connp2.recv(BUFSIZ)
 
     if msg1.decode() == "OK" and msg1 == msg2:
         for questao in questions:
