@@ -212,7 +212,7 @@ def main():
  
             if int(resp2) == int(questao.rightAns):
                 print(p2name, "acertou")
-                scorep1 += 10000 - tempop2 * 1000
+                scorep2 += 10000 - tempop2 * 1000
             else:
                 print(p2name, "errou")
     
