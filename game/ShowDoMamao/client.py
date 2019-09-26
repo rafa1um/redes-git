@@ -20,8 +20,6 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         self.botaoEnviar.clicked.connect(self.enviaResposta)
 
     def enviaResposta(self):
-        if self.botaoEnviar.text() == "Aguarde...":
-            return
         if self.botaoEnviar.text() == "FIM DE JOGO":
             exit()
         resposta = 0
@@ -36,7 +34,6 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         self.time_stop = time.perf_counter()
         respPlayer = [resposta, self.playerName, self.time_stop - self.time_start]
         self.con.sendall(pickle.dumps(respPlayer))
-        self.botaoEnviar.setText("Aguarde...")
         qst = self.con.recv(2000)
         try:
             if qst.decode() == "FIM":
@@ -69,7 +66,6 @@ class Client(QtWidgets.QMainWindow, formPerguntas.Ui_MainWindow):
         self.put_questions(qst)
 
     def put_questions(self, qst):
-        self.botaoEnviar.setText("Enviar")
         self.time_start = time.perf_counter()
         self.labelPergunta.setText(pickle.loads(qst).questionText)
         self.buttonResposta1.setText(pickle.loads(qst).ans1)
