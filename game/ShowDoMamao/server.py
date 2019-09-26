@@ -219,9 +219,9 @@ def main():
     stringfim = "FIM DE JOGO!\n O Vencedor foi "
     
     if scorep1 > scorep2:
-        stringfim += p1name + " com " + str(scorep1) + " pontos!"
+        stringfim += p1name + " com " + str('{0:.2f}'.fomrat(scorep1)) + " pontos!"
     if scorep2 > scorep1:
-        stringfim += p2name + " com " + str(scorep2) + " pontos!"
+        stringfim += p2name + " com " + str('{0:.2f}'.fomrat(scorep2)) + " pontos!"
     if scorep2 == scorep1:
         stringfim += "NINGUEM!!! houve um empate!"
     
