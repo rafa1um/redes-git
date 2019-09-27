@@ -206,17 +206,19 @@ def main():
             
             if int(resp1) == int(questao.rightAns):
                 print(p1name, "acertou")
-                scorep1 += 10000 - tempop1 * 1000
-                if scorep1 < 0:
-                    scorep1 = 0
+                if tempop1 < 10:
+                    scorep1 += 10000 - tempop1 * 1000
+                else:
+                    print(p1name, "esgotou o tempo e não pontuou.")
             else:
                 print(p1name, "errou")
  
             if int(resp2) == int(questao.rightAns):
                 print(p2name, "acertou")
-                scorep2 += 10000 - tempop2 * 1000
-                if scorep2 < 0:
-                    scorep2 = 0
+                if tempop2 < 10:
+                    scorep2 += 10000 - tempop2 * 1000
+                else:
+                    print(p2name, "esgotou o tempo e não pontuou.")
             else:
                 print(p2name, "errou")
     
